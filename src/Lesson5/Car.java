@@ -14,6 +14,8 @@ public class Car implements Runnable {
         private int speed;
         private String name;
         private CyclicBarrier preparing;
+        private static boolean win = false;
+        private static final Object mon = new Object();
         public String getName() {
             return name;
         }
@@ -41,6 +43,12 @@ public class Car implements Runnable {
             }
             for (int i = 0; i < race.getStages().size(); i++) {
                 race.getStages().get(i).go(this);
+            }
+            synchronized (mon) {
+                if (win == false) {
+                    win = true;
+                    System.out.println(this.getName() + " WIN");
+                }
             }
                 try {
                     preparing.await();
